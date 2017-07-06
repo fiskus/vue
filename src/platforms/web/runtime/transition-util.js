@@ -120,11 +120,11 @@ export function getTransitionInfo (el: Element, expectedType?: ?string): {
   hasTransform: boolean;
 } {
   const styles: any = window.getComputedStyle(el)
-  const transitionDelays: Array<string> = styles[transitionProp + 'Delay'].split(', ')
-  const transitionDurations: Array<string> = styles[transitionProp + 'Duration'].split(', ')
+  const transitionDelays: Array<string> = getDelays(styles, transitionProp)
+  const transitionDurations: Array<string> = getDurations(styles, transitionProp)
   const transitionTimeout: number = getTimeout(transitionDelays, transitionDurations)
-  const animationDelays: Array<string> = styles[animationProp + 'Delay'].split(', ')
-  const animationDurations: Array<string> = styles[animationProp + 'Duration'].split(', ')
+  const animationDelays: Array<string> = getDelays(styles, animationProp)
+  const animationDurations: Array<string> = getDurations(styles, animationProp)
   const animationTimeout: number = getTimeout(animationDelays, animationDurations)
 
   let type: ?string
@@ -165,6 +165,16 @@ export function getTransitionInfo (el: Element, expectedType?: ?string): {
     propCount,
     hasTransform
   }
+}
+
+function getDelays (styles: any, property: string): Array<string> {
+  const value = styles[property + 'Delay'] || ''
+  return value.split(', ')
+}
+
+function getDurations (styles: any, property: string): Array<string> {
+  const value = styles[property + 'Duration'] || ''
+  return value.split(', ')
 }
 
 function getTimeout (delays: Array<string>, durations: Array<string>): number {
